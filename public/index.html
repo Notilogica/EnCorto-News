@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EnCorto News - Noticias Rápidas y Relevantes</title>
+  
+  <!-- SEO & OG -->
+  <meta name="description" content="EnCorto News es tu espacio digital para informarte de forma rápida, clara y directa. Desde noticias virales hasta temas de impacto nacional, descubre lo que importa, explicado en corto.">
+  <meta property="og:title" content="EnCorto News - Noticias Rápidas y Relevantes">
+  <meta property="og:description" content="Infórmate sin rodeos. Noticias nacionales e internacionales explicadas en corto.">
+  <meta property="og:image" content="https://via.placeholder.com/1200x630?text=EnCorto+News">
+  <meta property="og:url" content="https://notilogica.netlify.app">
+  <meta name="twitter:card" content="summary_large_image">
 
+  <!-- Fuentes y CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    header.main-header {
+      position: relative;
+    }
+
+    .main-featured-news {
+      display: block;
+      position: relative;
+      text-decoration: none;
+    }
+
+    .main-featured-news img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+    }
+
+    .overlay-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    }
+
+    .overlay-text h1 {
+      font-size: 28px;
+      color: #0f0;
+      margin: 0;
+    }
+
+    .overlay-text p {
+      color: #ddd;
+    }
+
+    .carousel-section {
+      position: relative;
+      margin: 30px 0;
+      padding: 0 20px;
+    }
+
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .news-card {
+      flex: 0 0 auto;
+      background: #222;
+      border-radius: 8px;
+      width: 280px;
+      padding: 15px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+
+    .news-card img {
+      width: 100%;
+      border-radius: 6px;
+    }
+
+    .news-card h3 {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #0f0;
+    }
+
+    .news-card p {
+      color: #ccc;
+    }
+
+    .rss-feed {
+      background-color: #181818;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .rss-feed h2 {
+      margin-bottom: 20px;
+      color: #0f0;
+    }
+
+    .social-buttons {
+      margin-top: 20px;
+    }
+
+    .social-buttons a {
+      margin: 5px;
+      padding: 10px 20px;
+      background-color: #0f0;
+      color: #111;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    @media (max-width: 600px) {
+      .overlay-text h1 {
+        font-size: 20px;
+      }
+      .news-card {
+        width: 85%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ENCABEZADO DESTACADO -->
+  <header class="main-header">
+    <a href="#" class="main-featured-news">
+      <img src="https://via.placeholder.com/1200x400?text=EnCorto+News+Principal" alt="Noticia Principal" />
+      <div class="overlay-text">
+        <h1>Lo que pasó anoche en 'La Casa de los Famosos'</h1>
+        <p>Resumen breve del episodio que encendió redes y medios.</p>
+      </div>
+    </a>
+  </header>
+
+  <!-- CARRUSEL DE NOTICIAS -->
+  <section class="carousel-section">
+    <div class="carousel">
+      <div class="news-card">
+        <img src="https://via.placeholder.com/300x180?text=Noticia+1" alt="Noticia 1" />
+        <h3>Cruz Azul gana partido clave</h3>
+        <p>Victoria histórica en la Copa MX.</p>
+      </div>
+      <div class="news-card">
+        <img src="https://via.placeholder.com/300x180?text=Noticia+2" alt="Noticia 2" />
+        <h3>Adrián Di Monte en exclusiva</h3>
+        <p>Revelaciones sobre su vida personal.</p>
+      </div>
+      <div class="news-card">
+        <img src="https://via.placeholder.com/300x180?text=Noticia+3" alt="Noticia 3" />
+        <h3>Wendy Guevara rompe el silencio</h3>
+        <p>Video exclusivo que impacta.</p>
+      </div>
+      <div class="news-card">
+        <img src="https://via.placeholder.com/300x180?text=Noticia+4" alt="Noticia 4" />
+        <h3>Sismo reciente en Oaxaca</h3>
+        <p>Últimos reportes y reacciones.</p>
+      </div>
+      <div class="news-card">
+        <img src="https://via.placeholder.com/300x180?text=Noticia+5" alt="Noticia 5" />
+        <h3>Porto vs Atlético Madrid</h3>
+        <p>Resumen del partido y goles.</p>
+      </div>
+      <div class="news-card">
+        <img src="https://via.placeholder.com/300x180?text=Noticia+6" alt="Noticia 6" />
+        <h3>Lo nuevo en 'La Casa de los Famosos'</h3>
+        <p>Expectativas para esta semana.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSS + SOCIAL -->
+  <section class="rss-feed">
+    <h2>Últimas noticias (desde RSS)</h2>
+    <iframe src="https://rss.bloople.net/?url=https%3A%2F%2Fwww.eluniversal.com.mx%2Frss&limit=5" 
+            width="100%" height="300" style="border:none;"></iframe>
+
+    <div class="social-buttons">
+      <a href="https://facebook.com/sharer/sharer.php?u=https://notilogica.netlify.app" target="_blank">Compartir en Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=https://notilogica.netlify.app" target="_blank">Compartir en Twitter</a>
+      <a href="#" onclick="navigator.clipboard.writeText(window.location.href);alert('Enlace copiado');">Copiar enlace</a>
+    </div>
+  </section>
+
+</body>
+</html>
