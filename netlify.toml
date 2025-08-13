@@ -1,25 +1,25 @@
 [build]
-  publish = "."
+publish = "."
 
 [[redirects]]
-  from = "/api/*"
-  to = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/api/:splat"
-  status = 200
-  force = true
+from = "/api/*"
+to = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/api/:splat"
+status = 200
+force = true
 
 [[redirects]]
-  from = "/posts/*"
-  to = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/posts/:splat"
-  status = 200
-  force = true
+from = "/posts/*"
+to = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/posts/:splat"
+status = 200
+force = true
 
 [[redirects]]
-  from = "/vet"
-  to = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/vet"
-  status = 200
-  force = true
-  
+from = "/vet"
+to = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/vet"
+status = 200
+force = true
+  
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200
