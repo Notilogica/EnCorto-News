@@ -1,4 +1,4 @@
-// app.js - versión avanzada
+// app.js - versión optimizada
 
 document.addEventListener('DOMContentLoaded', () => {
     const videoHorizontal = document.getElementById('video-horizontal');
@@ -32,9 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Precargar noticias principales en sessionStorage
-    async function preloadNews() {
+    async function preloadNews(backendUrl) {
         try {
-            const res = await fetch('https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/api/news/principal');
+            const res = await fetch(`${backendUrl}/api/news/principal`);
+            if (!res.ok) throw new Error('Error al cargar noticias');
             const news = await res.json();
             sessionStorage.setItem('principalNews', JSON.stringify(news));
             return news;
@@ -47,9 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cargar URL de la app y enviar noticias precargadas
     async function loadAppUrlWithNews() {
         try {
-            const res = await fetch('https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/api/app-url');
+            // Se obtiene la URL del backend dinámicamente
+            const res = await fetch('/api/app-url');
+            if (!res.ok) throw new Error('No se pudo obtener la URL del backend');
             const data = await res.json();
             if (!data.url) throw new Error('No se recibió URL del backend');
+
+            // Precargar noticias con la URL recibida
+            await preloadNews(data.url);
 
             appFrame.src = data.url;
 
@@ -58,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const news = sessionStorage.getItem('principalNews');
                     if (news) {
-                        // Envía las noticias al iframe mediante postMessage
                         appFrame.contentWindow.postMessage({ type: 'LOAD_NEWS', news: JSON.parse(news) }, '*');
                     }
                 } catch (err) {
@@ -76,22 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         } catch (err) {
             console.error('Error al cargar la app:', err);
-            preloader.innerHTML = `<p>Error al cargar la app</p>`;
+            preloader.innerHTML = `<p>Error al cargar la app: ${err.message}</p>`;
         }
     }
 
     function init() {
         const video = showIntroVideo();
 
-        // Cambiar video si se gira pantalla
         window.addEventListener('resize', () => {
             showIntroVideo();
         });
 
-        // Inicia precarga de noticias y carga de app
-        preloadNews().then(() => loadAppUrlWithNews());
+        loadAppUrlWithNews();
 
-        // Al finalizar el video, asegurarse de mostrar iframe
         video.addEventListener('ended', () => {
             video.style.display = 'none';
             iframeContainer.style.display = 'block';
