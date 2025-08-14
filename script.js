@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Referencias a elementos del DOM
     const videoHorizontal = document.getElementById('video-horizontal');
     const videoVertical = document.getElementById('video-vertical');
+    const mainContent = document.querySelector('main');
 
     // URL del backend de Replit
     const BACKEND_URL = 'https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/';
@@ -11,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     preloader.id = 'preloader';
     preloader.innerHTML = `<div class="spinner"></div><p>Cargando Noticias...</p>`;
     document.body.appendChild(preloader);
+    
+    // Oculta el contenido principal al inicio para mostrar solo el video y preloader
+    mainContent.style.display = 'none';
 
     // --- Lógica de Orientación y Video ---
     function detectOrientation() {
@@ -30,13 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Esta función siempre oculta el preloader, sin importar el resultado del fetch
-    function hideVideoAndPreloader() {
+    // Esta función siempre oculta el preloader y los videos, y muestra el contenido principal
+    function hideVideoAndShowContent() {
         preloader.style.opacity = 0;
         setTimeout(() => {
             preloader.style.display = 'none';
             videoHorizontal.style.display = 'none';
             videoVertical.style.display = 'none';
+            mainContent.style.display = 'block'; // Muestra el contenido principal
         }, 500);
     }
     
@@ -49,16 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Función principal que obtiene los datos de la API y los renderiza
         async function fetchAndRenderNews() {
             try {
-                // Usamos AbortController para agregar un tiempo de espera (timeout) a la petición
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de tiempo de espera
-
+                
                 console.log('Fetching news from backend:', `${BACKEND_URL}/api/news/principal`);
                 
                 const response = await fetch(`${BACKEND_URL}/api/news/principal`, {
-                    signal: controller.signal // Asocia la señal de aborto a la petición
+                    signal: controller.signal
                 });
-                clearTimeout(timeoutId); // Limpia el timeout si la petición es exitosa
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -85,23 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error al obtener o renderizar la noticia principal:', error);
                 const mainSection = document.getElementById('main-news-section');
                 if (mainSection) {
-                    // Muestra un mensaje de error si la petición falla
                     mainSection.innerHTML = `
                         <h2 style="color: red;">Error al cargar la noticia</h2>
                         <p>No pudimos conectar con el servidor. Por favor, asegúrese de que el backend de Replit está activo e intente de nuevo más tarde.</p>
                     `;
                 }
             } finally {
-                // Siempre ocultamos el preloader en la parte final del proceso
-                hideVideoAndPreloader();
+                // Siempre ocultamos el video y mostramos el contenido, sin importar si el fetch falló
+                hideVideoAndShowContent();
             }
         }
         
-        // Carga las noticias cuando el video de introducción termina
-        video.addEventListener('ended', fetchAndRenderNews);
-        
-        // En caso de que el video ya haya terminado (por un refresh), carga las noticias de inmediato
-        if (video.readyState >= 3) {
+        // --- Lógica de la transición ---
+        // Esperamos a que el video esté listo para reproducirse
+        video.addEventListener('canplaythrough', () => {
+             // Oculta el video y muestra el contenido principal después de la duración del video
+            setTimeout(() => {
+                fetchAndRenderNews();
+            }, video.duration * 1000);
+        });
+
+         // Si el video ya está listo o se refresca la página, iniciamos la carga de noticias de inmediato
+        if (video.readyState >= 4) { // 4 = HAVE_ENOUGH_DATA
             fetchAndRenderNews();
         }
     }
