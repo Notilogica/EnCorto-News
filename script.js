@@ -2,8 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Referencias a elementos del DOM
     const videoHorizontal = document.getElementById('video-horizontal');
     const videoVertical = document.getElementById('video-vertical');
-    const iframeContainer = document.getElementById('iframe-container');
-    
+
     // URL del backend de Replit
     const BACKEND_URL = 'https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/';
 
@@ -31,32 +30,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Esta función siempre oculta el preloader, sin importar el resultado del fetch
     function hideVideoAndPreloader() {
         preloader.style.opacity = 0;
         setTimeout(() => {
             preloader.style.display = 'none';
             videoHorizontal.style.display = 'none';
             videoVertical.style.display = 'none';
-            // Ahora mostramos el contenido, no el iframe
-            // iframeContainer.style.display = 'block';
         }, 500);
     }
     
     // --- Lógica de inicialización ---
     function init() {
         const video = showIntroVideo();
-        // Ya no necesitamos ocultar el contenedor del iframe si no lo usamos
-        // iframeContainer.style.display = 'none';
         
         window.addEventListener('resize', () => showIntroVideo());
         
         // Función principal que obtiene los datos de la API y los renderiza
         async function fetchAndRenderNews() {
             try {
+                // Usamos AbortController para agregar un tiempo de espera (timeout) a la petición
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de tiempo de espera
+
                 console.log('Fetching news from backend:', `${BACKEND_URL}/api/news/principal`);
-                const response = await fetch(`${BACKEND_URL}/api/news/principal`);
                 
-                // Si la respuesta no es exitosa, lanzamos un error
+                const response = await fetch(`${BACKEND_URL}/api/news/principal`, {
+                    signal: controller.signal // Asocia la señal de aborto a la petición
+                });
+                clearTimeout(timeoutId); // Limpia el timeout si la petición es exitosa
+                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -65,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const mainSection = document.getElementById('main-news-section');
                 if (mainSection) {
-                    // Creamos dinámicamente el HTML con los datos recibidos
                     mainSection.innerHTML = `
                         <h2>Noticia Principal</h2>
                         <article>
@@ -83,10 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error al obtener o renderizar la noticia principal:', error);
                 const mainSection = document.getElementById('main-news-section');
                 if (mainSection) {
-                    mainSection.innerHTML = '<h2>Error al cargar la noticia</h2><p>Por favor, inténtelo de nuevo más tarde.</p>';
+                    // Muestra un mensaje de error si la petición falla
+                    mainSection.innerHTML = `
+                        <h2 style="color: red;">Error al cargar la noticia</h2>
+                        <p>No pudimos conectar con el servidor. Por favor, asegúrese de que el backend de Replit está activo e intente de nuevo más tarde.</p>
+                    `;
                 }
             } finally {
-                // Independientemente del resultado, ocultamos el preloader
+                // Siempre ocultamos el preloader en la parte final del proceso
                 hideVideoAndPreloader();
             }
         }
@@ -95,11 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
         video.addEventListener('ended', fetchAndRenderNews);
         
         // En caso de que el video ya haya terminado (por un refresh), carga las noticias de inmediato
-        if (video.readyState >= 3) { // 3 = HAVE_FUTURE_DATA
+        if (video.readyState >= 3) {
             fetchAndRenderNews();
         }
-        
-        // El listener de postMessage y la carga del iframe ya no son necesarios
     }
     
     init();
