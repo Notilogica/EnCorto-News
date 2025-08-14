@@ -3,34 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Sitio de Noticias</title>
-    <link rel="stylesheet" href="style.css">
-        <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Tu Sitio de Noticias",
-  "url": "https://tudominio.com"
-}
-</script>
+    <title>Noticias Curadas</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Loader animado -->
+    <div id="loader">
+        <svg id="logo" width="150" height="150" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" stroke="#4CAF50" stroke-width="5" fill="none"/>
+            <text x="50%" y="55%" text-anchor="middle" fill="#4CAF50" font-size="12px" font-family="Arial" dy=".3em">BIENVENIDO</text>
+        </svg>
+        <div class="spinner"></div>
+    </div>
 
-    <header>
-        <h1>Tu Sitio de Noticias</h1>
-    </header>
+    <!-- Contenedor del iframe -->
+    <div id="iframe-container">
+        <iframe id="app-frame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
 
-    <main>
-        <div id="posts-container">
-            <p>Cargando noticias...</p>
-        </div>
-    </main>
-
+    <!-- Footer legal -->
     <footer>
-        <p>&copy; 2025 Tu Sitio de Noticias</p>
+        <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
+        <p>Este sitio puede contener enlaces de marketing de afiliados. Podemos recibir comisión por compras referidas.</p>
+        <p>Políticas de Amazon y otras plataformas aplican.</p>
     </footer>
 
-    <script src="script.js"></script>
-
+    <script src="app.js"></script>
 </body>
 </html>
