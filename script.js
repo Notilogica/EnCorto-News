@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const iframeContainer = document.getElementById('iframe-container');
     const appFrame = document.getElementById('app-frame');
 
-    const BACKEND_URL = 'https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/'; 
+    const BACKEND_URL = 'https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/';
 
     // Preloader
     const preloader = document.createElement('div');
@@ -30,29 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function preloadNews() {
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/news/principal`);
-            if (!res.ok) throw new Error('Error al cargar noticias');
-            const news = await res.json();
-            sessionStorage.setItem('principalNews', JSON.stringify(news));
-            return news;
-        } catch (err) {
-            console.warn('No se pudieron precargar noticias principales:', err);
-            return [];
-        }
-    }
-
-    async function loadAppUrl() {
-        try {
-            await preloadNews();
-            appFrame.src = BACKEND_URL;
-        } catch (err) {
-            console.error('Error al cargar la app:', err);
-            preloader.innerHTML = `<p>Error al cargar la app: ${err.message}</p>`;
-        }
-    }
-
     function hideVideoAndPreloader() {
         preloader.style.opacity = 0;
         setTimeout(() => {
@@ -60,15 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
             videoHorizontal.style.display = 'none';
             videoVertical.style.display = 'none';
             iframeContainer.style.display = 'block';
-
-            try {
-                const news = sessionStorage.getItem('principalNews');
-                if (news) {
-                    appFrame.contentWindow.postMessage({ type: 'LOAD_NEWS', news: JSON.parse(news) }, '*');
-                }
-            } catch (err) {
-                console.warn('No se pudieron enviar las noticias al iframe:', err);
-            }
         }, 500);
     }
 
@@ -78,15 +46,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('resize', () => showIntroVideo());
 
-        // Fin del video
-        video.addEventListener('ended', hideVideoAndPreloader);
+        // Listener para recibir noticias desde Replit
+        window.addEventListener('message', (event) => {
+            if (!event.data || event.data.type !== 'LOAD_NEWS') return;
+            const news = event.data.news;
 
-        // Iframe cargado
-        appFrame.addEventListener('load', () => {
+            // Actualiza la sección principal o cualquier otra sección
+            const mainSection = document.getElementById('main-news-section');
+            if (mainSection && news) {
+                mainSection.innerHTML = '<h2>Noticia Principal</h2>' + JSON.stringify(news, null, 2);
+            }
+
+            console.log('Noticias recibidas desde Replit:', news);
             hideVideoAndPreloader();
         });
 
-        loadAppUrl();
+        // Cuando el iframe esté listo, carga el backend
+        appFrame.src = BACKEND_URL;
+
+        // Si el video termina antes de recibir noticias, aún ocultamos video/preloader
+        video.addEventListener('ended', hideVideoAndPreloader);
     }
 
     init();
