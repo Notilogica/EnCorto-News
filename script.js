@@ -1,46 +1,29 @@
-// script.js
-const REPLIT_API_URL = import.meta.env.VITE_REPLIT_API_URL;
-
-async function fetchNews() {
-    if (!REPLIT_API_URL) {
-        console.error('❌ La URL de la API de Replit no está configurada.');
-        document.getElementById('posts-container').innerHTML = '<p>Error de configuración: La URL de la API no está disponible.</p>';
-        return;
-    }
+document.addEventListener("DOMContentLoaded", async () => {
+    const loader = document.getElementById("loader");
+    const iframeContainer = document.getElementById("iframe-container");
+    const iframe = document.getElementById("app-frame");
 
     try {
-        const response = await fetch(`${REPLIT_API_URL}/api/news`);
-        if (!response.ok) {
-            throw new Error('Error al obtener las noticias del backend.');
-        }
-        const newsData = await response.json();
-        displayNews(newsData.principal);
+        const response = await fetch('https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/api/app-url');
+        const data = await response.json();
+
+        if (!data.url) throw new Error('URL de la app no disponible');
+        iframe.src = data.url;
+
+        // Cuando el iframe carga
+        iframe.onload = () => {
+            loader.classList.add('fade-out');
+            iframeContainer.classList.add('visible');
+        };
+
+        // Timeout máximo: si el backend tarda demasiado
+        setTimeout(() => {
+            loader.classList.add('fade-out');
+            iframeContainer.classList.add('visible');
+        }, 10000); // 10 segundos
+
     } catch (error) {
-        console.error('❌ Error:', error);
-        document.getElementById('posts-container').innerHTML = '<p>No se pudieron cargar las noticias. Inténtalo de nuevo más tarde.</p>';
+        console.error('Error cargando la app:', error);
+        loader.innerHTML = '<p>Error cargando la aplicación. Intenta recargar.</p>';
     }
-}
-
-function displayNews(posts) {
-    const container = document.getElementById('posts-container');
-    container.innerHTML = '';
-
-    if (!posts || posts.length === 0) {
-        container.innerHTML = '<p>No hay noticias disponibles en este momento.</p>';
-        return;
-    }
-
-    posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.className = 'news-post';
-        postElement.innerHTML = `
-            <h3><a href="${REPLIT_API_URL}/${post.link}">${post.title}</a></h3>
-            <img src="${post.image}" alt="${post.title}" style="max-width: 100%;">
-            <p>${post.summary}</p>
-            <small>Fuente: ${post.source}</small>
-        `;
-        container.appendChild(postElement);
-    });
-}
-
-fetchNews();
+});
