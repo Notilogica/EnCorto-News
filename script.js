@@ -1,10 +1,13 @@
-// app.js - versión optimizada
+// app.js - versión actualizada para Netlify
 
 document.addEventListener('DOMContentLoaded', () => {
     const videoHorizontal = document.getElementById('video-horizontal');
     const videoVertical = document.getElementById('video-vertical');
     const iframeContainer = document.getElementById('iframe-container');
     const appFrame = document.getElementById('app-frame');
+
+    // ** Reemplaza esta URL con la URL de tu backend en Replit. **
+    const BACKEND_URL = 'https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/'; 
 
     // Preloader
     const preloader = document.createElement('div');
@@ -48,16 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cargar URL de la app y enviar noticias precargadas
     async function loadAppUrlWithNews() {
         try {
-            // Se obtiene la URL del backend dinámicamente
-            const res = await fetch('/api/app-url');
-            if (!res.ok) throw new Error('No se pudo obtener la URL del backend');
-            const data = await res.json();
-            if (!data.url) throw new Error('No se recibió URL del backend');
+            // Se elimina la llamada a /api/app-url
+            // const res = await fetch('/api/app-url');
+            // ... (código que ya no es necesario)
 
-            // Precargar noticias con la URL recibida
-            await preloadNews(data.url);
-
-            appFrame.src = data.url;
+            // Usar directamente la URL del backend
+            await preloadNews(BACKEND_URL);
+            appFrame.src = BACKEND_URL;
 
             // Cuando el iframe esté listo, inyectar noticias precargadas
             appFrame.onload = () => {
