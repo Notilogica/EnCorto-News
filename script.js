@@ -53,47 +53,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Flags de sincronización
-    let videoEnded = false;
-    let iframeLoaded = false;
+    function hideVideoAndPreloader() {
+        preloader.style.opacity = 0;
+        setTimeout(() => {
+            preloader.style.display = 'none';
+            videoHorizontal.style.display = 'none';
+            videoVertical.style.display = 'none';
+            iframeContainer.style.display = 'block';
 
-    function checkReady() {
-        if (videoEnded && iframeLoaded) {
-            preloader.style.opacity = 0;
-            setTimeout(() => {
-                preloader.style.display = 'none';
-                videoHorizontal.style.display = 'none';
-                videoVertical.style.display = 'none';
-                iframeContainer.style.display = 'block';
-
-                // Enviar noticias al iframe
-                try {
-                    const news = sessionStorage.getItem('principalNews');
-                    if (news) {
-                        appFrame.contentWindow.postMessage({ type: 'LOAD_NEWS', news: JSON.parse(news) }, '*');
-                    }
-                } catch (err) {
-                    console.warn('No se pudieron enviar las noticias al iframe:', err);
+            try {
+                const news = sessionStorage.getItem('principalNews');
+                if (news) {
+                    appFrame.contentWindow.postMessage({ type: 'LOAD_NEWS', news: JSON.parse(news) }, '*');
                 }
-            }, 500);
-        }
+            } catch (err) {
+                console.warn('No se pudieron enviar las noticias al iframe:', err);
+            }
+        }, 500);
     }
 
     function init() {
         const video = showIntroVideo();
+        iframeContainer.style.display = 'none';
 
         window.addEventListener('resize', () => showIntroVideo());
 
-        // Detectar fin del video
-        video.addEventListener('ended', () => {
-            videoEnded = true;
-            checkReady();
-        });
+        // Fin del video
+        video.addEventListener('ended', hideVideoAndPreloader);
 
-        // Detectar carga del iframe
+        // Iframe cargado
         appFrame.addEventListener('load', () => {
-            iframeLoaded = true;
-            checkReady();
+            hideVideoAndPreloader();
         });
 
         loadAppUrl();
