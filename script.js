@@ -100,17 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // --- Lógica de la transición ---
-        // Esperamos a que el video esté listo para reproducirse
-        video.addEventListener('canplaythrough', () => {
-             // Oculta el video y muestra el contenido principal después de la duración del video
-            setTimeout(() => {
-                fetchAndRenderNews();
-            }, video.duration * 1000);
-        });
-
-         // Si el video ya está listo o se refresca la página, iniciamos la carga de noticias de inmediato
-        if (video.readyState >= 4) { // 4 = HAVE_ENOUGH_DATA
+        // Escucha el evento de 'ended' del video para iniciar la carga
+        video.addEventListener('ended', fetchAndRenderNews);
+        
+        // En caso de que el video ya haya terminado (por un refresh), carga las noticias de inmediato
+        if (video.readyState >= 4) {
             fetchAndRenderNews();
         }
     }
