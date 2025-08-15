@@ -30,21 +30,7 @@
         </footer>
     </div>
 
-    <!-- Obtener URL de Replit desde Netlify Function -->
-    <script>
-      fetch('/.netlify/functions/getReplitUrl')
-        .then(res => res.text())
-        .then(url => {
-            window.REPLIT_URL = url;
-            // Asignar al iframe
-            document.getElementById('iframe-news').src = `${url}/`;
-            // Asignar al RSS
-            document.getElementById('rss-link').href = `${url}/rss`;
-            console.log("Replit URL cargada desde Netlify:", window.REPLIT_URL);
-        })
-        .catch(err => console.error("Error al obtener la URL de Replit:", err));
-    </script>
-
+    <!-- Script único que obtiene la URL de Replit y maneja videos + iframe -->
     <script src="script.js"></script>
 </body>
 </html>
