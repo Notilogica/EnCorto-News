@@ -1,7 +1,12 @@
-// script.js (Código completo y corregido)
-
 const REPLIT_URL = window.REPLIT_URL;
 
+// --- Manejo dinámico del link RSS ---
+const rssLink = document.getElementById('rss-link');
+if (rssLink && REPLIT_URL) {
+    rssLink.href = `${REPLIT_URL}/rss`;
+}
+
+// --- Elementos de video y iframe ---
 const videoH = document.getElementById('video-horizontal');
 const videoV = document.getElementById('video-vertical');
 const videoContainer = document.getElementById('videoContainer');
@@ -31,7 +36,7 @@ function showIframe() {
     }, 800);
 }
 
-// --- Lógica de carga inicial (CORREGIDA) ---
+// --- Lógica de carga inicial ---
 function handleInitialLoad() {
     const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
     
@@ -42,7 +47,7 @@ function handleInitialLoad() {
             video.style.display = 'block';
         });
     } else {
-        // Si hay una ruta específica, se carga el iframe de inmediato
+        // Cargar ruta específica desde la URL
         videoContainer.style.display = 'none';
         iframeContainer.style.display = 'flex';
         iframe.src = `${REPLIT_URL}${window.location.pathname}`;
@@ -57,18 +62,21 @@ window.addEventListener('resize', updateVideoOrientation);
 window.addEventListener('message', (event) => {
     const data = event.data;
 
+    // Actualiza URL del navegador al abrir una noticia
     if (data.type === 'newsUrl' && data.url) {
         history.pushState(null, '', data.url);
     }
 
+    // Carga noticias específicas o portada desde el iframe
     if (data.type === 'loadNewsFromUrl' && data.url) {
-        iframe.src = `${REPLIT_URL}${data.url}`;
+        iframe.src = data.url === '/' ? `${REPLIT_URL}/` : `${REPLIT_URL}${data.url}`;
         if (data.url === '/') {
             history.pushState(null, '', '/');
         }
     }
 });
 
+// --- Manejo de back/forward del navegador ---
 window.addEventListener('popstate', () => {
     iframe.contentWindow.postMessage(
         { type: 'loadNewsFromUrl', url: location.pathname },
