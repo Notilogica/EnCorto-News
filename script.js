@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Referencias a elementos del DOM
+    const videoContainer = document.querySelector('.video-container'); // Nueva referencia al contenedor
     const videoHorizontal = document.getElementById('video-horizontal');
     const videoVertical = document.getElementById('video-vertical');
     const mainContent = document.querySelector('main');
@@ -34,13 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Esta función siempre oculta el preloader y los videos, y muestra el contenido principal
+    // Esta función ahora oculta el contenedor del video y el preloader, y muestra el contenido principal
     function hideVideoAndShowContent() {
+        // Ocultamos el contenedor principal del video con una transición suave
+        videoContainer.style.opacity = 0;
         preloader.style.opacity = 0;
         setTimeout(() => {
+            videoContainer.style.display = 'none';
             preloader.style.display = 'none';
-            videoHorizontal.style.display = 'none';
-            videoVertical.style.display = 'none';
             mainContent.style.display = 'block'; // Muestra el contenido principal
         }, 500);
     }
@@ -51,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         window.addEventListener('resize', () => showIntroVideo());
         
-        // Función principal que obtiene los datos de la API y los renderiza
         async function fetchAndRenderNews() {
             try {
                 const controller = new AbortController();
@@ -82,9 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </article>
                     `;
                 }
-
                 console.log('Noticia principal recibida y renderizada:', news);
-
             } catch (error) {
                 console.error('Error al obtener o renderizar la noticia principal:', error);
                 const mainSection = document.getElementById('main-news-section');
@@ -95,15 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 }
             } finally {
-                // Siempre ocultamos el video y mostramos el contenido, sin importar si el fetch falló
                 hideVideoAndShowContent();
             }
         }
         
-        // Escucha el evento de 'ended' del video para iniciar la carga
         video.addEventListener('ended', fetchAndRenderNews);
         
-        // En caso de que el video ya haya terminado (por un refresh), carga las noticias de inmediato
         if (video.readyState >= 4) {
             fetchAndRenderNews();
         }
