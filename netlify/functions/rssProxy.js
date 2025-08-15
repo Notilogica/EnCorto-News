@@ -12,13 +12,13 @@ exports.handler = async function(event, context) {
     // 🔹 Reemplazar dominio
     let updatedRss = rssText.replace(new RegExp(REPLIT_DOMAIN, 'g'), OFFICIAL_DOMAIN);
 
-    // 🔹 Corregir <webMaster>: debe ser un email válido
+    // 🔹 Corregir <webMaster> a email válido
     updatedRss = updatedRss.replace(
       /<webMaster><!\[CDATA\[.*?\]\]><\/webMaster>/,
       '<webMaster>admin@encortonews.qzz.io (Encorto News)</webMaster>'
     );
 
-    // 🔹 Asegurar que existe el namespace de "media"
+    // 🔹 Asegurar namespace de "media"
     if (!updatedRss.includes('xmlns:media=')) {
       updatedRss = updatedRss.replace(
         /<rss(.*?)>/,
@@ -31,6 +31,21 @@ exports.handler = async function(event, context) {
       /<atom:link[^>]*rel="self"[^>]*>/,
       `<atom:link href="${OFFICIAL_DOMAIN}/rss" rel="self" type="application/rss+xml"/>`
     );
+
+    // 🔹 Evitar GUID duplicados
+    // Creamos un set para llevar el control de GUIDs únicos
+    const guidSet = new Set();
+    updatedRss = updatedRss.replace(/<guid>(.*?)<\/guid>/g, (match, guid) => {
+      let newGuid = guid;
+      let counter = 1;
+      while (guidSet.has(newGuid)) {
+        // Agregar un sufijo único
+        newGuid = `${guid}#${counter}`;
+        counter++;
+      }
+      guidSet.add(newGuid);
+      return `<guid isPermaLink="false">${newGuid}</guid>`;
+    });
 
     return {
       statusCode: 200,
