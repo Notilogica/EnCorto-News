@@ -1,30 +1,43 @@
+/* Reset y estructura */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
+    font-family: Arial, sans-serif;
 }
 
-.video-container {
+.site-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Videos de intro */
+.video-intro {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    z-index: 9999;
+    background-color: black;
     overflow: hidden;
-    position: relative;
 }
 
-video {
+.video-intro video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: none; /* se mostrará según orientación */
+    display: none;
     position: absolute;
     top: 0;
     left: 0;
 }
 
+/* Contenedor del iframe */
 #iframe-container {
-    width: 100%;
-    height: 100vh;
+    flex: 1;
     display: none;
 }
 
@@ -34,10 +47,10 @@ video {
     border: none;
 }
 
+/* Footer */
 footer {
-    position: relative; 
-    z-index: 20;
-    padding: 10px;
+    z-index: 1;
+    padding: 15px;
     background-color: #f0f0f0;
     text-align: center;
     font-size: 14px;
