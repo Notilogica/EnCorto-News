@@ -5,11 +5,12 @@ const OFFICIAL_DOMAIN = 'https://mx.encortonews.qzz.io';
 
 exports.handler = async function(event, context) {
   try {
-    // Obtener RSS de Replit
+    // Obtener RSS desde Replit
     const response = await fetch(`${REPLIT_DOMAIN}/rss`);
     let rssText = await response.text();
 
-    // Reemplazar URLs de Replit por dominio oficial
+    // 🔹 NO escapamos el XML completo
+    // 🔹 Solo reemplazamos las URLs de Replit por el dominio oficial
     const updatedRss = rssText.replace(new RegExp(REPLIT_DOMAIN, 'g'), OFFICIAL_DOMAIN);
 
     return {
