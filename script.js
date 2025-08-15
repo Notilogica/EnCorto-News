@@ -1,4 +1,3 @@
-<script>
 (async function() {
     // --- Obtener URL de Replit desde Netlify Function ---
     try {
@@ -90,4 +89,4 @@
         console.error("Error al obtener la URL de Replit:", err);
     }
 })();
-</script>
+
