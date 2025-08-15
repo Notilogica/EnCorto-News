@@ -1,55 +1,41 @@
-/* Reset y base */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
-    font-family: Arial, sans-serif;
 }
 
-/* Contenedor de videos */
 .video-container {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
 }
 
-.video-container video {
-    position: absolute;
+video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: none; /* se mostrará con JS según orientación */
-}
-
-/* Contenedor de iframe */
-#iframe-container {
-    position: fixed;
+    display: none; /* se mostrará según orientación */
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    z-index: 5; /* debajo del video hasta que desaparezca */
 }
 
-#iframe-container iframe {
+#iframe-container {
+    width: 100%;
+    height: 100vh;
+    display: none;
+}
+
+#app-frame {
     width: 100%;
     height: 100%;
     border: none;
 }
 
-/* Footer */
 footer {
-    position: relative;
+    position: relative; 
     z-index: 20;
     padding: 10px;
     background-color: #f0f0f0;
