@@ -20,7 +20,7 @@
 
     <div class="site-wrapper">
         <div id="iframe-container">
-                        <iframe id="iframe-news" src="${REPLIT_URL}" frameborder="0" allowfullscreen></iframe>
+                        <iframe id="iframe-news" src="" frameborder="0" allowfullscreen></iframe>
         </div>
         <footer>
             <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
@@ -28,7 +28,9 @@
             <p>Políticas de Amazon y otras plataformas aplican.</p>
         </footer>
     </div>
-    
+    <script>
+  window.REPLIT_URL = "{{REPLIT_URL}}"; // Netlify reemplaza {{REPLIT_URL}} por tu valor real
+</script>
     <script src="script.js"></script>
 </body>
 </html>
