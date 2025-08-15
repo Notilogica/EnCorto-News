@@ -11,7 +11,6 @@ html, body {
     width: 100%;
     height: 100%;
     font-family: 'Arial', sans-serif;
-    /* Eliminamos overflow: hidden; para permitir el scroll en el contenido de noticias */
     background-color: #000;
 }
 
@@ -33,6 +32,8 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #000;
+    /* Transición suave para ocultar el contenedor */
+    transition: opacity 0.5s ease;
 }
 
 .video-container video {
@@ -48,7 +49,6 @@ body {
     Contenido principal (Noticias)
 ================================= */
 main {
-  /* El JS controlará cuándo mostrar el contenido principal */
   background-color: #f0f2f5;
   color: #333;
   padding: 20px;
