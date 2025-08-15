@@ -9,9 +9,28 @@ exports.handler = async function(event, context) {
     const response = await fetch(`${REPLIT_DOMAIN}/rss`);
     let rssText = await response.text();
 
-    // 🔹 NO escapamos el XML completo
-    // 🔹 Solo reemplazamos las URLs de Replit por el dominio oficial
-    const updatedRss = rssText.replace(new RegExp(REPLIT_DOMAIN, 'g'), OFFICIAL_DOMAIN);
+    // 🔹 Reemplazar dominio
+    let updatedRss = rssText.replace(new RegExp(REPLIT_DOMAIN, 'g'), OFFICIAL_DOMAIN);
+
+    // 🔹 Corregir <webMaster>: debe ser un email válido
+    updatedRss = updatedRss.replace(
+      /<webMaster><!\[CDATA\[.*?\]\]><\/webMaster>/,
+      '<webMaster>admin@encortonews.qzz.io (Encorto News)</webMaster>'
+    );
+
+    // 🔹 Asegurar que existe el namespace de "media"
+    if (!updatedRss.includes('xmlns:media=')) {
+      updatedRss = updatedRss.replace(
+        /<rss(.*?)>/,
+        '<rss$1 xmlns:media="http://search.yahoo.com/mrss/">'
+      );
+    }
+
+    // 🔹 Arreglar self reference en <atom:link>
+    updatedRss = updatedRss.replace(
+      /<atom:link[^>]*rel="self"[^>]*>/,
+      `<atom:link href="${OFFICIAL_DOMAIN}/rss" rel="self" type="application/rss+xml"/>`
+    );
 
     return {
       statusCode: 200,
