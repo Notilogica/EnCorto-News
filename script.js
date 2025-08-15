@@ -1,6 +1,5 @@
-// script.js (Código completo y final)
+// script.js (Código completo y corregido)
 
-// Netlify reemplaza esto con el valor de la variable de entorno durante el "build"
 const REPLIT_URL = "${REPLIT_URL}";
 
 const videoH = document.getElementById('video-horizontal');
@@ -8,27 +7,6 @@ const videoV = document.getElementById('video-vertical');
 const videoContainer = document.getElementById('videoContainer');
 const iframeContainer = document.getElementById('iframe-container');
 const iframe = document.getElementById('iframe-news');
-
-// --- Lógica de inicialización (se ejecuta al inicio) ---
-function initializePage() {
-    // Configura las URLs del iframe y el feed RSS
-    iframe.src = `${REPLIT_URL}`;
-    document.getElementById('rss-link').href = `${REPLIT_URL}/rss`;
-
-    // Llama a la lógica de videos si la URL es la página principal
-    if (window.location.pathname === '/') {
-        updateVideoOrientation();
-        [videoH, videoV].forEach(video => {
-            video.addEventListener('ended', showIframe);
-            video.style.display = 'block';
-        });
-    } else {
-        // Si la URL ya tiene una noticia (ej. /noticia/slug), omite el video
-        videoContainer.style.display = 'none';
-        iframeContainer.style.display = 'flex';
-        iframe.src = `${REPLIT_URL}${window.location.pathname}`;
-    }
-}
 
 // --- Manejo de orientación de video ---
 function updateVideoOrientation() {
@@ -53,16 +31,36 @@ function showIframe() {
     }, 800);
 }
 
+// --- Lógica de carga inicial (CORREGIDA) ---
+function handleInitialLoad() {
+    const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+    
+    if (isHomePage) {
+        updateVideoOrientation();
+        [videoH, videoV].forEach(video => {
+            video.addEventListener('ended', showIframe);
+            video.style.display = 'block';
+        });
+    } else {
+        // Si hay una ruta específica, se carga el iframe de inmediato
+        videoContainer.style.display = 'none';
+        iframeContainer.style.display = 'flex';
+        iframe.src = `${REPLIT_URL}${window.location.pathname}`;
+    }
+}
+
 // --- Eventos ---
-window.addEventListener('load', initializePage);
+window.addEventListener('load', handleInitialLoad);
 window.addEventListener('resize', updateVideoOrientation);
 
-// --- Comunicación con iframe y manejo de historial ---
+// --- Comunicación con iframe ---
 window.addEventListener('message', (event) => {
     const data = event.data;
+
     if (data.type === 'newsUrl' && data.url) {
         history.pushState(null, '', data.url);
     }
+
     if (data.type === 'loadNewsFromUrl' && data.url) {
         iframe.src = `${REPLIT_URL}${data.url}`;
         if (data.url === '/') {
