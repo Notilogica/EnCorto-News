@@ -1,117 +1,58 @@
-/* ================================
-    Reset y estilos básicos
-================================= */
-* {
+/* Reset y base */
+html, body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    width: 100%;
     height: 100%;
-    font-family: 'Arial', sans-serif;
-    background-color: #000;
+    width: 100%;
+    font-family: Arial, sans-serif;
 }
 
-body {
-  transition: background-color 0.5s ease;
-}
-
-/* ================================
-    Contenedor de videos (intro)
-================================= */
+/* Contenedor de videos */
 .video-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 999;
+    overflow: hidden;
+    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #000;
-    /* Transición suave para ocultar el contenedor */
-    transition: opacity 0.5s ease;
 }
 
 .video-container video {
+    position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: none; /* se mostrará con JS según orientación */
 }
 
-/* ================================
-    Contenido principal (Noticias)
-================================= */
-main {
-  background-color: #f0f2f5;
-  color: #333;
-  padding: 20px;
-}
-
-/* Puedes añadir más estilos aquí para las secciones de noticias, carrusel, etc. */
-
-/* ================================
-    Preloader
-================================= */
-#preloader {
+/* Contenedor de iframe */
+#iframe-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    z-index: 1000;
-    transition: opacity 0.5s ease;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 5; /* debajo del video hasta que desaparezca */
 }
 
-/* ================================
-    Footer legal
-================================= */
-footer {
+#iframe-container iframe {
     width: 100%;
-    background-color: rgba(0,0,0,0.8);
-    color: #fff;
-    font-size: 0.8rem;
+    height: 100%;
+    border: none;
+}
+
+/* Footer */
+footer {
+    position: relative;
+    z-index: 20;
+    padding: 10px;
+    background-color: #f0f0f0;
     text-align: center;
-    padding: 10px 5px;
-    line-height: 1.4;
-}
-
-footer p {
-    margin: 2px 0;
-}
-
-/* ================================
-    Responsividad
-================================= */
-@media (orientation: portrait) {
-    .video-container video#video-horizontal {
-        display: none;
-    }
-    .video-container video#video-vertical {
-        display: block;
-    }
-}
-
-@media (orientation: landscape) {
-    .video-container video#video-horizontal {
-        display: block;
-    }
-    .video-container video#video-vertical {
-        display: none;
-    }
+    font-size: 14px;
 }
