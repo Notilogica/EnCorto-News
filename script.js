@@ -1,6 +1,6 @@
 // script.js (Código completo y corregido)
 
-const REPLIT_URL = "${REPLIT_URL}";
+const REPLIT_URL = window.REPLIT_URL;
 
 const videoH = document.getElementById('video-horizontal');
 const videoV = document.getElementById('video-vertical');
