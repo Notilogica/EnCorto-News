@@ -1,12 +1,5 @@
 const REPLIT_URL = window.REPLIT_URL;
 
-// --- Manejo dinámico del link RSS ---
-const rssLink = document.getElementById('rss-link');
-if (rssLink && REPLIT_URL) {
-    rssLink.href = `${REPLIT_URL}/rss`;
-}
-
-// --- Elementos de video y iframe ---
 const videoH = document.getElementById('video-horizontal');
 const videoV = document.getElementById('video-vertical');
 const videoContainer = document.getElementById('videoContainer');
@@ -32,14 +25,14 @@ function showIframe() {
     setTimeout(() => {
         videoContainer.style.display = 'none';
         iframeContainer.style.display = 'flex';
-        iframe.src = `${REPLIT_URL}/`;
+        iframe.src = `${REPLIT_URL}/`; // carga Replit directamente
     }, 800);
 }
 
-// --- Lógica de carga inicial ---
+// --- Carga inicial ---
 function handleInitialLoad() {
     const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
-    
+
     if (isHomePage) {
         updateVideoOrientation();
         [videoH, videoV].forEach(video => {
@@ -47,31 +40,29 @@ function handleInitialLoad() {
             video.style.display = 'block';
         });
     } else {
-        // Cargar ruta específica desde la URL
+        // Ruta específica: carga iframe de inmediato
         videoContainer.style.display = 'none';
         iframeContainer.style.display = 'flex';
         iframe.src = `${REPLIT_URL}${window.location.pathname}`;
     }
 }
 
-// --- Eventos ---
-window.addEventListener('load', handleInitialLoad);
-window.addEventListener('resize', updateVideoOrientation);
-
 // --- Comunicación con iframe ---
 window.addEventListener('message', (event) => {
     const data = event.data;
 
-    // Actualiza URL del navegador al abrir una noticia
+    // Actualiza URL cuando se visualiza una noticia
     if (data.type === 'newsUrl' && data.url) {
         history.pushState(null, '', data.url);
     }
 
-    // Carga noticias específicas o portada desde el iframe
+    // Cargar noticia específica o volver a inicio
     if (data.type === 'loadNewsFromUrl' && data.url) {
-        iframe.src = data.url === '/' ? `${REPLIT_URL}/` : `${REPLIT_URL}${data.url}`;
         if (data.url === '/') {
+            iframe.src = `${REPLIT_URL}/`;
             history.pushState(null, '', '/');
+        } else {
+            iframe.src = `${REPLIT_URL}${data.url}`;
         }
     }
 });
@@ -83,3 +74,7 @@ window.addEventListener('popstate', () => {
         '*'
     );
 });
+
+// --- Eventos ---
+window.addEventListener('load', handleInitialLoad);
+window.addEventListener('resize', updateVideoOrientation);
