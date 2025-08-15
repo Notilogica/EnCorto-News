@@ -24,6 +24,7 @@ function initApp() {
     const iframeContainer = document.getElementById('iframe-container');
     const iframe = document.getElementById('iframe-news');
 
+    // --- Manejo de orientación de video ---
     function updateVideoOrientation() {
         if (window.innerHeight > window.innerWidth) {
             videoV.style.display = 'block';
@@ -36,15 +37,20 @@ function initApp() {
         }
     }
 
+    // --- Mostrar iframe después del video ---
     function showIframe() {
         videoContainer.style.opacity = 0;
         setTimeout(() => {
             videoContainer.style.display = 'none';
             iframeContainer.style.display = 'flex';
-            iframe.src = `${REPLIT_URL}${window.location.pathname}`;
+            
+            // Carga la noticia específica desde Replit según la ruta actual
+            const currentPath = window.location.pathname; 
+            iframe.src = `${REPLIT_URL}${currentPath}`;
         }, 800);
     }
 
+    // --- Carga inicial ---
     function handleInitialLoad() {
         const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
         if (isHomePage) {
@@ -57,11 +63,12 @@ function initApp() {
             // Ruta específica de noticia: mostrar iframe directamente
             videoContainer.style.display = 'none';
             iframeContainer.style.display = 'flex';
-            iframe.src = `${REPLIT_URL}${window.location.pathname}`;
+            const currentPath = window.location.pathname;
+            iframe.src = `${REPLIT_URL}${currentPath}`;
         }
     }
 
-    // Comunicación con iframe
+    // --- Comunicación con iframe ---
     window.addEventListener('message', (event) => {
         const data = event.data;
 
@@ -75,6 +82,7 @@ function initApp() {
         }
     });
 
+    // --- Manejo de back/forward del navegador ---
     window.addEventListener('popstate', () => {
         iframe.contentWindow.postMessage(
             { type: 'loadNewsFromUrl', url: location.pathname },
@@ -82,6 +90,7 @@ function initApp() {
         );
     });
 
+    // --- Eventos ---
     window.addEventListener('load', handleInitialLoad);
     window.addEventListener('resize', updateVideoOrientation);
 }
