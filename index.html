@@ -21,7 +21,7 @@
 
     <div class="site-wrapper">
         <div id="iframe-container">
-<iframe id="iframe-news" src="https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/" frameborder="0" allowfullscreen></iframe>
+            <iframe id="iframe-news" src="" frameborder="0" allowfullscreen></iframe>
         </div>
         <footer>
             <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
@@ -30,11 +30,19 @@
         </footer>
     </div>
 
-    <!-- Variable de entorno Netlify -->
+    <!-- Obtener URL de Replit desde Netlify Function -->
     <script>
- window.REPLIT_URL = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev";
-        document.getElementById('rss-link').href = `${window.REPLIT_URL}/rss`;
-        console.log("Replit URL:", window.REPLIT_URL);
+      fetch('/.netlify/functions/getReplitUrl')
+        .then(res => res.text())
+        .then(url => {
+            window.REPLIT_URL = url;
+            // Asignar al iframe
+            document.getElementById('iframe-news').src = `${url}/`;
+            // Asignar al RSS
+            document.getElementById('rss-link').href = `${url}/rss`;
+            console.log("Replit URL cargada desde Netlify:", window.REPLIT_URL);
+        })
+        .catch(err => console.error("Error al obtener la URL de Replit:", err));
     </script>
 
     <script src="script.js"></script>
