@@ -32,19 +32,32 @@ exports.handler = async function(event, context) {
       `<atom:link href="${OFFICIAL_DOMAIN}/rss" rel="self" type="application/rss+xml"/>`
     );
 
-    // 🔹 Evitar GUID duplicados
-    // Creamos un set para llevar el control de GUIDs únicos
+    // 🔹 Evitar GUID duplicados y actualizar pubDate para que IFTTT lo considere nuevo
     const guidSet = new Set();
-    updatedRss = updatedRss.replace(/<guid>(.*?)<\/guid>/g, (match, guid) => {
+    let minuteOffset = 0; // Para escalonar las fechas
+    updatedRss = updatedRss.replace(/<item>([\s\S]*?)<\/item>/g, (match, itemContent) => {
+      // Actualizar GUID
+      const guidMatch = itemContent.match(/<guid>(.*?)<\/guid>/);
+      let guid = guidMatch ? guidMatch[1] : `item-${Math.random()}`;
       let newGuid = guid;
       let counter = 1;
       while (guidSet.has(newGuid)) {
-        // Agregar un sufijo único
         newGuid = `${guid}#${counter}`;
         counter++;
       }
       guidSet.add(newGuid);
-      return `<guid isPermaLink="false">${newGuid}</guid>`;
+
+      // Actualizar pubDate escalonado
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + minuteOffset);
+      const pubDate = now.toUTCString();
+      minuteOffset += 1; // Sumar 1 minuto para el siguiente item
+
+      let updatedItem = itemContent
+        .replace(/<guid>.*?<\/guid>/, `<guid isPermaLink="false">${newGuid}</guid>`)
+        .replace(/<pubDate>.*?<\/pubDate>/, `<pubDate>${pubDate}</pubDate>`);
+
+      return `<item>${updatedItem}</item>`;
     });
 
     return {
