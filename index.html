@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noticias Curadas</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noticias Curadas</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="video-container">
-        <video id="video-horizontal" autoplay muted loop playsinline>
-            <source src="intro-horizontal.mp4" type="video/mp4">
-        </video>
-        <video id="video-vertical" autoplay muted loop playsinline>
-            <source src="intro-vertical.mp4" type="video/mp4">
-        </video>
-    </div>
+  <div class="video-container" id="videoContainer">
+    <video id="video-horizontal" autoplay muted playsinline>
+      <source src="intro-horizontal.mp4" type="video/mp4">
+    </video>
 
-    <div id="iframe-container">
-        <iframe id="app-frame" src="" frameborder="0" allowfullscreen></iframe>
-    </div>
+    <video id="video-vertical" autoplay muted playsinline>
+      <source src="intro-vertical.mp4" type="video/mp4">
+    </video>
+  </div>
 
-    <footer>
-        <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
-        <p>Este sitio puede contener enlaces de marketing de afiliados. Podemos recibir comisión por compras referidas.</p>
-        <p>Políticas de Amazon y otras plataformas aplican.</p>
-    </footer>
+  <div id="iframe-container">
+      <iframe id="app-frame" src="" frameborder="0" allowfullscreen></iframe>
+  </div>
 
-    <script src="script.js"></script>
+  <footer>
+      <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
+      <p>Este sitio puede contener enlaces de marketing de afiliados. Podemos recibir comisión por compras referidas.</p>
+      <p>Políticas de Amazon y otras plataformas aplican.</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
