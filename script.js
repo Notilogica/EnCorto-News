@@ -1,109 +1,50 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Referencias a elementos del DOM
-    const videoContainer = document.querySelector('.video-container'); // Nueva referencia al contenedor
-    const videoHorizontal = document.getElementById('video-horizontal');
-    const videoVertical = document.getElementById('video-vertical');
-    const mainContent = document.querySelector('main');
+const replUrl = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/";
 
-    // URL del backend de Replit
-    const BACKEND_URL = 'https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/';
+const iframe = document.getElementById('app-frame');
+const container = document.getElementById('iframe-container');
+const videoH = document.getElementById('video-horizontal');
+const videoV = document.getElementById('video-vertical');
+const videoContainer = document.querySelector('.video-container');
 
-    // --- Preloader ---
-    const preloader = document.createElement('div');
-    preloader.id = 'preloader';
-    preloader.innerHTML = `<div class="spinner"></div><p>Cargando Noticias...</p>`;
-    document.body.appendChild(preloader);
-    
-    // Oculta el contenido principal al inicio para mostrar solo el video y preloader
-    mainContent.style.display = 'none';
-
-    // --- Lógica de Orientación y Video ---
-    function detectOrientation() {
-        return window.innerWidth > window.innerHeight ? 'horizontal' : 'vertical';
+function updateVideoDisplay() {
+    if (window.innerHeight > window.innerWidth) {
+        videoV.style.display = 'block';
+        videoH.style.display = 'none';
+    } else {
+        videoH.style.display = 'block';
+        videoV.style.display = 'none';
     }
+}
 
-    function showIntroVideo() {
-        const orientation = detectOrientation();
-        if (orientation === 'horizontal') {
-            videoHorizontal.style.display = 'block';
-            videoVertical.style.display = 'none';
-            return videoHorizontal;
+updateVideoDisplay();
+window.addEventListener('resize', updateVideoDisplay);
+window.addEventListener('orientationchange', updateVideoDisplay);
+
+function showIframe() {
+    // Fade-out videos
+    videoContainer.style.opacity = '0';
+
+    // Esperar la transición antes de ocultar completamente
+    setTimeout(() => {
+        videoH.style.display = 'none';
+        videoV.style.display = 'none';
+        videoContainer.style.display = 'none';
+
+        // Mostrar iframe con fade-in
+        container.classList.add('active');
+
+        if (replUrl) {
+            iframe.src = replUrl;
         } else {
-            videoVertical.style.display = 'block';
-            videoHorizontal.style.display = 'none';
-            return videoVertical;
+            iframe.srcdoc = "<p>La aplicación no está disponible.</p>";
+            console.warn("⚠️ La URL de Replit no está configurada.");
         }
-    }
+    }, 1000); // duración de transición
+}
 
-    // Esta función ahora oculta el contenedor del video y el preloader, y muestra el contenido principal
-    function hideVideoAndShowContent() {
-        // Ocultamos el contenedor principal del video con una transición suave
-        videoContainer.style.opacity = 0;
-        preloader.style.opacity = 0;
-        setTimeout(() => {
-            videoContainer.style.display = 'none';
-            preloader.style.display = 'none';
-            mainContent.style.display = 'block'; // Muestra el contenido principal
-        }, 500);
-    }
-    
-    // --- Lógica de inicialización ---
-    function init() {
-        const video = showIntroVideo();
-        
-        window.addEventListener('resize', () => showIntroVideo());
-        
-        async function fetchAndRenderNews() {
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos de tiempo de espera
-                
-                console.log('Fetching news from backend:', `${BACKEND_URL}/api/news/principal`);
-                
-                const response = await fetch(`${BACKEND_URL}/api/news/principal`, {
-                    signal: controller.signal
-                });
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const news = await response.json();
-                
-                const mainSection = document.getElementById('main-news-section');
-                if (mainSection) {
-                    mainSection.innerHTML = `
-                        <h2>Noticia Principal</h2>
-                        <article>
-                            <img src="${news.image}" alt="${news.title}" style="max-width: 100%; height: auto; border-radius: 8px;">
-                            <h3>${news.title}</h3>
-                            <p>${news.summary}</p>
-                            <a href="${news.link}" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: none;">Leer más</a>
-                        </article>
-                    `;
-                }
-                console.log('Noticia principal recibida y renderizada:', news);
-            } catch (error) {
-                console.error('Error al obtener o renderizar la noticia principal:', error);
-                const mainSection = document.getElementById('main-news-section');
-                if (mainSection) {
-                    mainSection.innerHTML = `
-                        <h2 style="color: red;">Error al cargar la noticia</h2>
-                        <p>No pudimos conectar con el servidor. Por favor, asegúrese de que el backend de Replit está activo e intente de nuevo más tarde.</p>
-                    `;
-                }
-            } finally {
-                hideVideoAndShowContent();
-            }
-        }
-        
-        video.addEventListener('ended', fetchAndRenderNews);
-        
-        if (video.readyState >= 4) {
-            fetchAndRenderNews();
-        }
-    }
-    
-    init();
-});
+// Detectar final de video o timeout
+videoH.addEventListener('ended', showIframe);
+videoV.addEventListener('ended', showIframe);
+
+// Timeout opcional: mostrar iframe tras 8s
+setTimeout(showIframe, 8000);
