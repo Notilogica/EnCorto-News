@@ -37,34 +37,41 @@ function initApp() {
         }
     }
 
-    // --- Mostrar iframe y cargar la noticia actual ---
-    function showIframe() {
+    // --- Mostrar iframe y cargar la noticia ---
+    function showIframe(path) {
         videoContainer.style.opacity = 0;
         setTimeout(() => {
             videoContainer.style.display = 'none';
             iframeContainer.style.display = 'flex';
 
-            const currentPath = window.location.pathname; // /posts/... o /
+            const currentPath = path || window.location.pathname; // /posts/... o /
             iframe.src = `${REPLIT_URL}${currentPath}`;
         }, 800);
     }
 
     // --- Carga inicial ---
     function handleInitialLoad() {
-        const path = window.location.pathname;
+        const urlParams = new URLSearchParams(window.location.search);
+        const newsPath = urlParams.get('news'); // Detecta ?news=/posts/...
 
-        // Si estamos en la portada, mostramos videos intro
-        if (path === '/' || path === '') {
+        if (newsPath) {
+            // Si viene noticia desde parámetro, cargar directamente
+            videoContainer.style.display = 'none';
+            iframeContainer.style.display = 'flex';
+            iframe.src = `${REPLIT_URL}${newsPath}`;
+            history.replaceState(null, '', newsPath); // Actualiza URL visible
+        } else if (window.location.pathname === '/' || window.location.pathname === '') {
+            // Si estamos en la portada, mostramos videos intro
             updateVideoOrientation();
             [videoH, videoV].forEach(video => {
-                video.addEventListener('ended', showIframe);
+                video.addEventListener('ended', () => showIframe('/'));
                 video.style.display = 'block';
             });
         } else {
-            // Si es una noticia compartida, cargamos directamente en el iframe
+            // Carga directa de otra ruta sin parámetro
             videoContainer.style.display = 'none';
             iframeContainer.style.display = 'flex';
-            iframe.src = `${REPLIT_URL}${path}`;
+            iframe.src = `${REPLIT_URL}${window.location.pathname}`;
         }
     }
 
