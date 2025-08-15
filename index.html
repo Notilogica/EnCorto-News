@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Noticias Curadas</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias Curadas</title>
+    <link rel="stylesheet" href="style.css">
 
-        <link id="rss-link" rel="alternate" type="application/rss+xml" title="RSS Feed de Noticias" href="${REPLIT_URL}/rss" />
+    <!-- RSS link vacío inicialmente -->
+    <link id="rss-link" rel="alternate" type="application/rss+xml" title="RSS Feed de Noticias" href="" />
 </head>
 <body>
-    <div class="video-intro" id="videoContainer">
-        <video id="video-horizontal" autoplay muted playsinline>
-            <source src="intro-horizontal.mp4" type="video/mp4">
-        </video>
-        <video id="video-vertical" autoplay muted playsinline>
-            <source src="intro-vertical.mp4" type="video/mp4">
-        </video>
-    </div>
+    <div class="video-intro" id="videoContainer">
+        <video id="video-horizontal" autoplay muted playsinline>
+            <source src="intro-horizontal.mp4" type="video/mp4">
+        </video>
+        <video id="video-vertical" autoplay muted playsinline>
+            <source src="intro-vertical.mp4" type="video/mp4">
+        </video>
+    </div>
 
-    <div class="site-wrapper">
-        <div id="iframe-container">
-                        <iframe id="iframe-news" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <footer>
-            <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
-            <p>Este sitio puede contener enlaces de marketing de afiliados. Podemos recibir comisión por compras referidas.</p>
-            <p>Políticas de Amazon y otras plataformas aplican.</p>
-        </footer>
-    </div>
-    <script>
-  window.REPLIT_URL = "{{REPLIT_URL}}"; // Netlify reemplaza {{REPLIT_URL}} por tu valor real
-</script>
-    <script src="script.js"></script>
+    <div class="site-wrapper">
+        <div id="iframe-container">
+            <iframe id="iframe-news" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <footer>
+            <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
+            <p>Este sitio puede contener enlaces de marketing de afiliados. Podemos recibir comisión por compras referidas.</p>
+            <p>Políticas de Amazon y otras plataformas aplican.</p>
+        </footer>
+    </div>
+
+    <!-- Define la URL desde la variable de entorno de Netlify -->
+    <script>
+        window.REPLIT_URL = "{{REPLIT_URL}}"; // Netlify reemplaza {{REPLIT_URL}}
+    </script>
+
+    <!-- Script principal -->
+    <script src="script.js"></script>
 </body>
 </html>
