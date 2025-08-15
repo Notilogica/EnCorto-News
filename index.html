@@ -5,76 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noticias Curadas</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #iframe-container {
+            width: 100%;
+            height: calc(100vh - 200px); /* Ajusta según videos y footer */
+            overflow: hidden;
+        }
+        #app-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="video-container">
-        <!-- Video horizontal: se muestra en pantallas anchas o móviles en horizontal -->
-        <video id="video-horizontal" autoplay muted playsinline>
-            <source src="intro-horizontal.mp4" type="video/mp4">
-        </video>
+   <div class="video-container">
+      <video id="video-horizontal" autoplay muted loop playsinline>
+        <source src="intro-horizontal.mp4" type="video/mp4">
+      </video>
 
-        <!-- Video vertical: se muestra solo en móviles verticales -->
-        <video id="video-vertical" autoplay muted playsinline>
-            <source src="intro-vertical.mp4" type="video/mp4">
-        </video>
+      <video id="video-vertical" autoplay muted loop playsinline>
+        <source src="intro-vertical.mp4" type="video/mp4">
+      </video>
     </div>
 
-    <header>
-        <h1>Noticias Generadas</h1>
-    </header>
-
-    <main>
-        <section id="main-news-section" class="main-news">
-            <h2>Noticia Principal</h2>
-        </section>
-
-        <section id="affiliate-banner-1" class="affiliate-banner-container">
-        </section>
-
-        <section id="notitrends-carousel-section">
-            <h3>Noticias Virales (NotiTrends)</h3>
-            <div id="notitrends-carousel" class="carousel">
-            </div>
-        </section>
-
-        <section id="affiliate-banner-2" class="affiliate-banner-container">
-        </section>
-
-        <section id="latest-news-mosaic-section">
-            <h3>Lo más reciente</h3>
-            <div id="latest-news-mosaic-container" class="mosaic-grid">
-            </div>
-        </section>
-
-        <section id="affiliate-banner-3" class="affiliate-banner-container">
-        </section>
-
-        <section id="almomento-book-section">
-            <h3>Al Momento</h3>
-            <div class="book-container">
-                <div class="book-page left-page">
-                </div>
-                <div class="book-page right-page">
-                </div>
-            </div>
-        </section>
-
-        <section id="affiliate-banner-4" class="affiliate-banner-container">
-        </section>
-
-        <section id="popular-stories-section">
-            <h3>Historias Populares</h3>
-            <div class="news-grid">
-            </div>
-        </section>
-    </main>
+    <div id="iframe-container">
+        <iframe id="app-frame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
 
     <footer>
-        <p>&copy; 2025 Mi Sitio de Noticias. Todos los derechos reservados.</p>
+        <p>&copy; 2025 Noticias Curadas. Todos los derechos reservados.</p>
         <p>Este sitio puede contener enlaces de marketing de afiliados. Podemos recibir comisión por compras referidas.</p>
         <p>Políticas de Amazon y otras plataformas aplican.</p>
     </footer>
 
-    <script src="app.js"></script>
+    <script>
+        // Simulando la variable secreta
+        const replUrl = "https://33243b64-65f9-4988-8d60-13ca62670193-00-3oapw4fw99k9c.picard.replit.dev/";
+        const iframe = document.getElementById('app-frame');
+
+        if (replUrl) {
+            iframe.src = replUrl;
+        } else {
+            iframe.srcdoc = "<p>La aplicación no está disponible.</p>";
+            console.warn("⚠️ La URL de Replit no está configurada.");
+        }
+    </script>
 </body>
 </html>
