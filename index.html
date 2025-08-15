@@ -6,7 +6,7 @@
     <title>Noticias Curadas</title>
     <link rel="stylesheet" href="style.css">
 
-    <!-- RSS link vacío inicialmente -->
+    <!-- RSS Feed apuntando a Replit -->
     <link id="rss-link" rel="alternate" type="application/rss+xml" title="RSS Feed de Noticias" href="" />
 </head>
 <body>
@@ -30,12 +30,13 @@
         </footer>
     </div>
 
-    <!-- Define la URL desde la variable de entorno de Netlify -->
+    <!-- Variable de entorno Netlify -->
     <script>
-        window.REPLIT_URL = "{{REPLIT_URL}}"; // Netlify reemplaza {{REPLIT_URL}}
+        window.REPLIT_URL = "{{REPLIT_URL}}"; // Netlify reemplaza {{REPLIT_URL}} por tu valor real
+        document.getElementById('rss-link').href = `${window.REPLIT_URL}/rss`;
+        console.log("Replit URL:", window.REPLIT_URL);
     </script>
 
-    <!-- Script principal -->
     <script src="script.js"></script>
 </body>
 </html>
