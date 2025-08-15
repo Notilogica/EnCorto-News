@@ -2,24 +2,6 @@
   publish = "."
 
 [[redirects]]
-  from = "/api/*"
-  to = "${REPLIT_APP_URL}/api/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/posts/*"
-  to = "${REPLIT_APP_URL}/posts/:splat"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/vet"
-  to = "${REPLIT_APP_URL}/vet"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
