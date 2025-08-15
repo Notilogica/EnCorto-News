@@ -24,6 +24,7 @@ function initApp() {
     const iframeContainer = document.getElementById('iframe-container');
     const iframe = document.getElementById('iframe-news');
 
+    // --- Manejo de orientación de video ---
     function updateVideoOrientation() {
         if (window.innerHeight > window.innerWidth) {
             videoV.style.display = 'block';
@@ -36,35 +37,38 @@ function initApp() {
         }
     }
 
+    // --- Mostrar iframe y cargar la noticia actual ---
     function showIframe() {
         videoContainer.style.opacity = 0;
         setTimeout(() => {
             videoContainer.style.display = 'none';
             iframeContainer.style.display = 'flex';
 
-            // Carga la noticia actual en el iframe
             const currentPath = window.location.pathname; // /posts/... o /
             iframe.src = `${REPLIT_URL}${currentPath}`;
         }, 800);
     }
 
+    // --- Carga inicial ---
     function handleInitialLoad() {
-        const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
-        if (isHomePage) {
+        const path = window.location.pathname;
+
+        // Si estamos en la portada, mostramos videos intro
+        if (path === '/' || path === '') {
             updateVideoOrientation();
             [videoH, videoV].forEach(video => {
                 video.addEventListener('ended', showIframe);
                 video.style.display = 'block';
             });
         } else {
-            // Carga directa de la noticia específica
+            // Si es una noticia compartida, cargamos directamente en el iframe
             videoContainer.style.display = 'none';
             iframeContainer.style.display = 'flex';
-            iframe.src = `${REPLIT_URL}${window.location.pathname}`;
+            iframe.src = `${REPLIT_URL}${path}`;
         }
     }
 
-    // Comunicación con iframe
+    // --- Comunicación con iframe ---
     window.addEventListener('message', (event) => {
         const data = event.data;
 
@@ -78,7 +82,7 @@ function initApp() {
         }
     });
 
-    // Manejo de back/forward del navegador
+    // --- Manejo de back/forward del navegador ---
     window.addEventListener('popstate', () => {
         iframe.contentWindow.postMessage(
             { type: 'loadNewsFromUrl', url: location.pathname },
@@ -86,6 +90,7 @@ function initApp() {
         );
     });
 
+    // --- Eventos ---
     window.addEventListener('load', handleInitialLoad);
     window.addEventListener('resize', updateVideoOrientation);
 }
