@@ -32,9 +32,9 @@ exports.handler = async function(event, context) {
       `<atom:link href="${OFFICIAL_DOMAIN}/rss" rel="self" type="application/rss+xml"/>`
     );
 
-    // 🔹 Evitar GUID duplicados y actualizar pubDate para que IFTTT lo considere nuevo
+    // 🔹 Evitar GUID duplicados y escalonar pubDate
     const guidSet = new Set();
-    let minuteOffset = 0; // Para escalonar las fechas
+    let minuteOffset = 0; // Para escalonar fechas
     updatedRss = updatedRss.replace(/<item>([\s\S]*?)<\/item>/g, (match, itemContent) => {
       // Actualizar GUID
       const guidMatch = itemContent.match(/<guid>(.*?)<\/guid>/);
@@ -47,7 +47,7 @@ exports.handler = async function(event, context) {
       }
       guidSet.add(newGuid);
 
-      // Actualizar pubDate escalonado
+      // Escalonar pubDate
       const now = new Date();
       now.setMinutes(now.getMinutes() + minuteOffset);
       const pubDate = now.toUTCString();
